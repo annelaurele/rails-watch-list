@@ -1,0 +1,43 @@
+<div class="banner" style="background-image: url(https://images.rtl.fr/~c/2000v2000/rtl/www/1215383-une-salle-de-cinema-vide-illustration.jpg);">
+  <h1><%= @list.name %></h1>
+</div>
+
+<div class="container">
+  <div class="cards movie-card">
+    <div class="card">
+      <img src="https://images.rtl.fr/~c/880v587/rtl/www/1120758-uma-thurman-a-failli-ne-pas-incarner-mia-wallace-dans-pulp-fiction.jpg" class="card-img-top" alt="Pulp Fiction">
+      <div class="card-body">
+        <b>Pulp Fiction</b><br>L'odyssée sanglante et burlesque de petits malfrats dans la jungle de Hollywood à travers trois histoires qui s'entremêlent.
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <img src="https://img-4.linternaute.com/CSwM0BxeB7fjgpoHPzw0_rfc_CU=/1240x/smart/eb09768b9f164ae58aa197c2ce4f5fe5/ccmcms-linternaute/16437712.jpg" class="card-img-top" alt="Les evades">
+        <div class="card-body">
+          <b>Les évadés</b><br>En 1947, Andy Dufresne, un jeune banquier, est condamné à la prison à vie pour le meurtre de sa femme et de son amant. Ayant beau clamer son innocence, il est emprisonné à Shawshank, le pénitencier le plus sévère de l'Etat du Maine. Il y fait la rencontre de Red, un Noir désabusé, détenu depuis vingt ans. Commence alors une grande histoire d'amitié entre les deux hommes...
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <img src="" class="card-img-top" alt="Pulp Fiction">
+        <div class="card-body">
+          <b>Pulp Fiction</b><br>L'odyssée sanglante et burlesque de petits malfrats dans la jungle de Hollywood à travers trois histoires qui s'entremêlent.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<h3> Bookmarks </h3>
+   <ul class="list-group mb-3">
+    <% @list.bookmarks.each do |bookmark| %>
+      <li class="list-group-item"><%= bookmark.movie.title %><br>
+      <%= bookmark.comment %><br>
+      <%= link_to 'Delete this bookmark',  bookmark_path(bookmark), method: :delete, data: { confirm: "Are you sure?" }, class:"btn btn-outline-danger" %></li>
+    <% end %>
+  </ul>
+
+<%= link_to 'Create a new bookmark',  new_list_bookmark_path(@list) %><br>
+<%= link_to 'Back to my lists', lists_path %>
