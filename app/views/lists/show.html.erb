@@ -1,43 +1,67 @@
-<div class="banner" style="background-image: url(https://images.rtl.fr/~c/2000v2000/rtl/www/1215383-une-salle-de-cinema-vide-illustration.jpg);">
-  <h1><%= @list.name %></h1>
+<div class="position-relative">
+  <div class="card-category card-large" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(<%= asset_path('list_background.jpg') %>)">
+    <h1><%= @list.name %></h1>
+  </div>
+    <span class="movie-tag"><%= pluralize(@list.movies.size, 'movie') %></span>
 </div>
-
-<div class="container">
-  <div class="cards movie-card">
-    <div class="card">
-      <img src="https://images.rtl.fr/~c/880v587/rtl/www/1120758-uma-thurman-a-failli-ne-pas-incarner-mia-wallace-dans-pulp-fiction.jpg" class="card-img-top" alt="Pulp Fiction">
-      <div class="card-body">
-        <b>Pulp Fiction</b><br>L'odyssée sanglante et burlesque de petits malfrats dans la jungle de Hollywood à travers trois histoires qui s'entremêlent.
-      </div>
+<div class="container mb-5">
+  <div class="d-flex justify-content-between my-4">
+    <span class="mb-2 d-block"><small><em class="text-muted"><%= "You haven't saved any movies yet!" if @list.movies.empty? %></em></small></span>
+    <div>
+      <button type="button" class="btn btn-flat" data-toggle="modal" data-target="#new_movie_modal">
+        add a movie
+      </button>
+      <%= link_to 'delete this list', list_path(@list), method: :delete, class: 'btn btn-cancel', data: { confirm: 'Are you sure you want to delete this list?' } %>
     </div>
-
-    <div class="container">
-      <div class="card">
-        <img src="https://img-4.linternaute.com/CSwM0BxeB7fjgpoHPzw0_rfc_CU=/1240x/smart/eb09768b9f164ae58aa197c2ce4f5fe5/ccmcms-linternaute/16437712.jpg" class="card-img-top" alt="Les evades">
-        <div class="card-body">
-          <b>Les évadés</b><br>En 1947, Andy Dufresne, un jeune banquier, est condamné à la prison à vie pour le meurtre de sa femme et de son amant. Ayant beau clamer son innocence, il est emprisonné à Shawshank, le pénitencier le plus sévère de l'Etat du Maine. Il y fait la rencontre de Red, un Noir désabusé, détenu depuis vingt ans. Commence alors une grande histoire d'amitié entre les deux hommes...
+  </div>
+  <div class="row my-2">
+    <% @list.movies.each do |movie| %>
+      <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
+      <div class="col-12 col-sm-6 mb-4" data-aos="zoom-in">
+        <div class="bg-white rounded shadow h-100">
+          <%= image_tag movie.poster_url, alt: movie.title, class: 'movie-img rounded-top' %>
+          <div class="p-3 rounded-bottom d-flex flex-column">
+            <strong><%= movie.title %> <span class="text-muted font-weight-normal">• <%= movie.rating %> <i class="fas fa-star star-yellow"></i></span></strong>
+            <small class="text-muted"><%= movie.overview %></small>
+            <div class="d-flex align-items-end justify-content-between pt-4">
+              <div>
+                <i class="fas fa-quote-left mr-2"></i><small class="flex-grow-1"><%= bookmark.comment %></small>
+              </div>
+              <small class="text-right flex-shrink-0"><%= link_to 'delete', bookmark_path(bookmark), method: :delete, data: { confirm: "Are you sure you want to remove #{movie.title} from your #{@list.name} list"}, class: 'text-danger' %></small>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="container">
-      <div class="card">
-        <img src="" class="card-img-top" alt="Pulp Fiction">
-        <div class="card-body">
-          <b>Pulp Fiction</b><br>L'odyssée sanglante et burlesque de petits malfrats dans la jungle de Hollywood à travers trois histoires qui s'entremêlent.
+    <% end %>
+  </div>
+  <hr class="my-5">
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <h3>Reviews</h3>
+      <% if @list.reviews.empty? %>
+        <small><em class="text-muted">Be the first one to review this list</em></small>
+      <% end %>
+      <% @list.reviews.each do |review| %>
+        <div>
+          <% review.rating.times do %>
+            <i class="fas fa-star star-yellow"></i>
+          <% end %>
+          <small><em class="text-muted"><%= distance_of_time_in_words_to_now(review.created_at) %> ago</em></small>
+          <p class="mb-0"><%= review.comment %></p>
         </div>
+        <hr>
+      <% end %>
+    </div>
+    <div class="col-12 col-sm-6">
+      <div class="bg-white rounded p-3">
+        <h5>Add your review</h5>
+        <%= simple_form_for [@list, @review] do |f| %>
+          <%= f.input :comment, placeholder: 'Add your review here...' %>
+          <%= f.input :rating, as: :select, collection: (1..5), required: true, prompt: "What's your rating", input_html: { id: 'review_rating' } %>
+          <%= f.submit class:'btn btn-flat' %>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
-<h3> Bookmarks </h3>
-   <ul class="list-group mb-3">
-    <% @list.bookmarks.each do |bookmark| %>
-      <li class="list-group-item"><%= bookmark.movie.title %><br>
-      <%= bookmark.comment %><br>
-      <%= link_to 'Delete this bookmark',  bookmark_path(bookmark), method: :delete, data: { confirm: "Are you sure?" }, class:"btn btn-outline-danger" %></li>
-    <% end %>
-  </ul>
-
-<%= link_to 'Create a new bookmark',  new_list_bookmark_path(@list) %><br>
-<%= link_to 'Back to my lists', lists_path %>
+<%= render 'bookmarks/new', list: @list %>

@@ -1,28 +1,23 @@
-<div class="banner" style="background-image: url(https://images.rtl.fr/~c/2000v2000/rtl/www/1215383-une-salle-de-cinema-vide-illustration.jpg);">
-</div>
-
-<div class="container list-container"><h2>My Lists</h2></div>
-
-  <div class="container">
-    <div class="cards">
-      <a href="/lists/1">
-        <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/hbz-classic-movies-00-index-new-1591823486.jpg)">
-          Classic Movie
-        </div>
-      </a>
-
-      <a href="/lists/2">
-        <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(https://static.posters.cz/image/750/affiches-et-posters/marvel-universe-i31869.jpg)">
-          Marvel Movie
-        </div>
-      </a>
-
-      <a href="/lists/3">
-        <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(https://i.ytimg.com/vi/wWlXPZvY0f4/maxresdefault.jpg)">
-          New Movie
-        </div>
-      </a>
-    </div>
+<div class="cover mb-4 d-flex align-items-center justify-content-center">
+  <div class="text-center text-white">
+    <h1>Save any kind of movies</h1>
+    <h3 class="typed-js"></h3>
   </div>
-<br>
-<div class="container"><%= link_to 'Create a movie list', new_list_path, class:"btn btn-success" %></div>
+</div>
+<div class="container py-5">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="mb-0">My Lists</h3>
+    <%= link_to 'Create a movie list', new_list_path, class: 'btn btn-flat' %>
+  </div>
+  <div class="row">
+    <% @lists.each do |list| %>
+      <div class="co-12 colsm-6 col-md-4 mb-3">
+        <%= link_to list_path(list), class:'text-decoration-none' do %>
+          <div class="card-category" data-aos="zoom-in" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(<%= asset_path('list_background.jpg') %>)">
+            <%= list.name %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
